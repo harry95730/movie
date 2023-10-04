@@ -1,25 +1,43 @@
+import 'package:flutter_application_1/clas.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/page2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/page2.dart';
 
 class Listpage extends StatefulWidget {
-  const Listpage({super.key});
+  final Function refresh;
+  const Listpage({super.key, required this.refresh});
 
   @override
   State<Listpage> createState() => _ListpageState();
 }
 
 class _ListpageState extends State<Listpage> {
+  final List<Bloc> _searchResults = [];
+  TextEditingController controller = TextEditingController();
   bool kr = false;
   void someAsyncFunction() async {
     try {
-      await Servi().fetchData(variable);
+      await Servi().fetchBlogs(context);
       setState(() {
         kr = true;
       });
     } catch (e) {
       throw Exception('Error: $e');
     }
+  }
+
+  _onSearchTextChanged(String query) async {
+    _searchResults.clear();
+    if (query.isEmpty) {
+      setState(() {});
+      return;
+    }
+    for (var element in dataMap) {
+      if (element.title.toLowerCase().contains(query.toLowerCase())) {
+        _searchResults.add(element);
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -33,28 +51,57 @@ class _ListpageState extends State<Listpage> {
   @override
   Widget build(BuildContext context) {
     return kr
-        ? ListView.builder(
-            itemCount: (data.length / 2).ceil(),
-            itemBuilder: (BuildContext context, int index) {
-              int startIndex = index * 2;
-              List keys = data.keys.toList();
-              if (startIndex < keys.length) {
-                String key1 = keys[startIndex];
-
-                if (startIndex + 1 < keys.length) {
-                  String key2 = keys[startIndex + 1];
-
-                  return box(data[key1], data[key2]);
-                } else {
-                  return box(data[key1], '');
-                }
-              } else {
-                return Container();
-              }
-            },
+        ? Column(
+            children: [
+              Expanded(
+                flex: !sea ? 1 : 0,
+                child: !sea
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 20.0, right: 10),
+                        child: AppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          title: TextField(
+                            onChanged: _onSearchTextChanged,
+                            controller: controller,
+                            decoration: const InputDecoration(
+                              labelText: 'Search  Article',
+                              hintMaxLines: 1,
+                            ),
+                          ),
+                          actions: [
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              color: Colors.black,
+                              onPressed: () {
+                                controller.text = '';
+                                _onSearchTextChanged('');
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
+              ),
+              Expanded(
+                  flex: !sea ? 9 : 10,
+                  child: _searchResults.isNotEmpty || controller.text.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return box(_searchResults[index]);
+                          },
+                        )
+                      : ListView.builder(
+                          itemCount: dataMap.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return box(dataMap[index]);
+                          },
+                        )),
+            ],
           )
         : const Center(
-            heightFactor: BorderSide.strokeAlignCenter,
             child: CircularProgressIndicator(
               strokeWidth: 2,
               backgroundColor: Colors.black,
@@ -62,39 +109,25 @@ class _ListpageState extends State<Listpage> {
           );
   }
 
-  Widget box(var name, var name1) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(child: buildColoredBox(name['name'].toString(), name['path'])),
-        Expanded(
-          child: name1 != ''
-              ? buildColoredBox(name1['name'].toString(), name1['path'])
-              : const SizedBox(
-                  height: 80,
-                  width: 185,
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildColoredBox(String text, String path) {
+  Widget box(Bloc ele) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Classroom(text: text, path: path)));
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Eachbloc(
+              text: ele,
+            ),
+          ),
+        );
+        setState(() {});
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          height: 80,
-          width: 185,
+          height: 100,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.black87,
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.8),
@@ -104,41 +137,96 @@ class _ListpageState extends State<Listpage> {
               ),
             ],
           ),
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.transparent,
-                child: ClipOval(
-                  child: Image.network(
-                    'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        );
-                      }
-                    },
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return const Text('Failed to load image');
-                    },
+              Expanded(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      ele.title,
+                      style: const TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
+                      softWrap: true,
+                    ),
                   ),
                 ),
               ),
               Expanded(
-                child: Text(
-                  text,
-                  softWrap: true,
+                flex: 3,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white70.withOpacity(0.8),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Image.network(
+                          ele.imgurl,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              );
+                            }
+                          },
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Text('Failed to load image');
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32.0),
+                              topLeft: Radius.circular(32.0),
+                            ),
+                            boxShadow: [BoxShadow(color: Colors.black87)]),
+                        child: IconButton(
+                          alignment: Alignment.center,
+                          icon: Icon(
+                            Icons.star,
+                            color: ele.lik ? Colors.blueGrey : Colors.yellow,
+                          ),
+                          onPressed: () {
+                            ele.lik = !ele.lik;
+                            Servi().update(ele);
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              )
             ],
           ),
         ),

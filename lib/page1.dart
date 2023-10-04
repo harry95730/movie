@@ -1,32 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/class.dart';
 import 'package:flutter_application_1/listofsub.dart';
+import 'package:flutter_application_1/page3.dart';
 
-class Custompage extends StatelessWidget {
+class Custompage extends StatefulWidget {
   const Custompage({super.key});
+
+  @override
+  State<Custompage> createState() => _CustompageState();
+}
+
+class _CustompageState extends State<Custompage> {
+  void refresh() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.lightBlue[200],
         toolbarHeight: 80.0,
-        title: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Class 12',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Books',
-                style: TextStyle(fontSize: 16),
-              )
-            ],
+        title: Center(child: Design().titl()),
+        actions: [
+          IconButton(
+            alignment: Alignment.center,
+            icon: const Icon(
+              Icons.star,
+              color: Colors.yellow,
+            ),
+            onPressed: () async {
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Custompage1()));
+              setState(() {});
+            },
           ),
-        ),
+        ],
       ),
-      body: const Listpage(),
+      body: Listpage(
+        refresh: refresh,
+      ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black87,
+          onPressed: () {
+            refresh();
+            setState(() {
+              sea = !sea;
+            });
+          },
+          child: Icon(
+            sea ? Icons.search : Icons.close,
+          )),
     );
   }
 }
