@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/clas.dart';
 import 'package:flutter_application_1/class.dart';
 import 'package:flutter_application_1/listofsub.dart';
+import 'package:flutter_application_1/splashscreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    home: Splashscreen(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -69,111 +73,107 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight + 40),
-            child: Center(
-              child: ClipPath(
-                clipper: CustomAppBar(),
-                child: AppBar(
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFFDEF9F9),
-                            Color(0xFFFEFEFE),
-                          ],
-                        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.0),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight + 40),
+          child: Center(
+            child: ClipPath(
+              clipper: CustomAppBar(),
+              child: AppBar(
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFFDEF9F9),
+                          Color(0xFFFEFEFE),
+                        ],
                       ),
                     ),
                   ),
-                  title: const SafeArea(
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                            radius: 21.0,
-                            backgroundImage:
-                                AssetImage('assets/images/i3.jpg')),
-                        SizedBox(width: 12.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Hello ,',
-                                style: TextStyle(
-                                    fontSize: 10.0, color: Colors.black)),
-                            Text('M alwan',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: FaIcon(
-                            size: min(20, 20),
-                            FontAwesomeIcons.solidBell,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: FaIcon(
-                              size: min(20, 20),
-                              FontAwesomeIcons.list,
-                              color: Colors.black),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ],
                 ),
+                title: const SafeArea(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 21.0,
+                          backgroundImage: AssetImage('assets/images/i3.jpg')),
+                      SizedBox(width: 12.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Hello ,',
+                              style: TextStyle(
+                                  fontSize: 10.0, color: Colors.black)),
+                          Text('M alwan',
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.black)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: FaIcon(
+                          size: min(20, 20),
+                          FontAwesomeIcons.solidBell,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: FaIcon(
+                            size: min(20, 20),
+                            FontAwesomeIcons.list,
+                            color: Colors.black),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20.0, right: 10.0, bottom: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        color: Colors.grey[300]),
-                    child: TextField(
-                      onChanged: onSearchTextChanged,
-                      controller: controller,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.black,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 10.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        labelText: 'Search for brand',
-                        hintMaxLines: 1,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 10.0, bottom: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.grey[300]),
+                  child: TextField(
+                    onChanged: onSearchTextChanged,
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
                       ),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      labelText: 'Search for brand',
+                      hintMaxLines: 1,
                     ),
                   ),
                 ),
-                const PictureSlider(),
-                function(context, _searchResults),
-              ],
-            ),
+              ),
+              const PictureSlider(),
+              function(context, _searchResults),
+            ],
           ),
         ),
       ),
