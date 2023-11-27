@@ -31,6 +31,7 @@ class Servi {
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
+      dataMap.clear();
       List<dynamic> parsedJson = json.decode(response.body);
       for (var jsonMovie in parsedJson) {
         Movies movie = Movies.fromJson(jsonMovie);
@@ -43,7 +44,6 @@ class Servi {
           'Request failed with status code: ${response.statusCode}',
           Colors.red);
     }
-
     return [];
   }
 }

@@ -27,12 +27,12 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> someAsyncFunction() async {
     try {
+      _searchResults.clear();
       List<Movies> abc = [];
       abc = await Servi().fetchBlogs(context);
       for (var i in abc) {
         _searchResults.add(i);
       }
-
       setState(() {
         kr = true;
       });
@@ -44,9 +44,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      someAsyncFunction();
-    });
+    someAsyncFunction();
   }
 
   @override

@@ -18,28 +18,15 @@ class _SearchpageState extends State<Searchpage> {
   @override
   void initState() {
     super.initState();
-    hat = '';
-    someAsyncFunction();
+    onSearchTextChanged("");
   }
 
   onSearchTextChanged(String query) async {
     hat = query;
-    await someAsyncFunction();
-    _searchResults.clear();
     if (query.isEmpty) {
-      for (var i in dataMap) {
-        _searchResults.add(i);
-      }
-      setState(() {
-        fro = !fro;
-      });
-      return;
+      hat = "a";
     }
-    for (var i in dataMap) {
-      if (i.show!.name!.toLowerCase().contains(query)) {
-        _searchResults.add(i);
-      }
-    }
+    await someAsyncFunction();
     setState(() {
       fro = !fro;
     });
@@ -47,12 +34,12 @@ class _SearchpageState extends State<Searchpage> {
 
   Future<void> someAsyncFunction() async {
     try {
+      _searchResults.clear();
       List<Movies> abc = [];
       abc = await Servi().fetchBlogs(context);
       for (var i in abc) {
         _searchResults.add(i);
       }
-
       setState(() {
         kr = true;
       });
@@ -85,7 +72,7 @@ class _SearchpageState extends State<Searchpage> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              labelText: 'Search for brand',
+              labelText: 'Search for Movie',
               hintMaxLines: 1,
             ),
           ),
