@@ -12,26 +12,18 @@ class MovingZ extends StatefulWidget {
 
 class _MovingZState extends State<MovingZ> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  String currentImagePath = 'assets/images/i1.jpg';
-  bool c = false;
-  bool d = false;
-  final List<String> imagePaths = [
-    'assets/images/i1.jpg',
-    'assets/images/i12.jpg',
-    'assets/images/i3.jpg',
-  ];
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
-    _controller.repeat(reverse: true);
     f();
   }
 
   void f() async {
-    await Future.delayed(const Duration(milliseconds: 3350), () {});
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _controller.forward();
+    await Future.delayed(const Duration(milliseconds: 5000), () {});
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const MyApp()));
   }
@@ -65,7 +57,7 @@ class _MovingZState extends State<MovingZ> with SingleTickerProviderStateMixin {
               children: [
                 for (var i = 0; i < 1; i++)
                   Positioned(
-                    left: i * 30.0,
+                    left: (MediaQuery.of(context).size.width / 4),
                     child: AnimatedBuilder(
                       animation: _controller,
                       builder: (context, child) {

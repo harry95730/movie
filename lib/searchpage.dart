@@ -92,7 +92,10 @@ class _SearchpageState extends State<Searchpage> {
         ),
       ),
       body: Container(
-          color: Colors.black, child: function(context, _searchResults)),
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.black,
+          child: function(context, _searchResults)),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromRGBO(13, 13, 13, 1),
         elevation: 2,

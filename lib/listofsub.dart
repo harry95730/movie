@@ -5,30 +5,36 @@ import 'package:flutter_application_1/rating.dart';
 
 Widget function(BuildContext context, List<Movies> searchResults) {
   return searchResults.isNotEmpty
-      ? ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: (searchResults.length / 2).ceil(),
-          itemBuilder: (BuildContext context, int index) {
-            int startIndex = index * 2;
-
-            if (startIndex < searchResults.length) {
-              Movies abc = searchResults[startIndex];
-              if (startIndex + 1 < searchResults.length) {
-                Movies def = searchResults[startIndex + 1];
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [eachwid(context, abc), eachwid(context, def)],
-                );
-              } else {
-                return Row(
-                  children: [eachwid(context, abc), Container()],
-                );
-              }
-            }
-            return Container();
-          },
-        )
+      ? LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+          int wid = ((MediaQuery.of(context).size.width - 30) / 175).floor();
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemCount: (searchResults.length / wid).ceil(),
+            itemBuilder: (BuildContext context, int rowIndex) {
+              return Center(
+                child: SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: wid,
+                    itemBuilder: (BuildContext context, int index) {
+                      int itemIndex = (rowIndex * wid) + index;
+                      if (itemIndex >= searchResults.length) {
+                        return Container();
+                      }
+                      Movies abc = searchResults[itemIndex];
+                      return eachwid(context, abc);
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        })
       : const Center(
           child: Text(
           'NO SEARCH RESULTS FOUND',

@@ -44,13 +44,10 @@ class _MyPageState extends State<MyPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            widget.harry.show != null
-                ? widget.harry.show!.image != null
-                    ? widget.harry.show!.image!.medium != null
-                        ? ima(img)
-                        : Container()
+            widget.harry.show!.image != null
+                ? widget.harry.show!.image!.medium != null
+                    ? ima(img)
                     : Container()
                 : Container(),
             widget.harry.show!.rating!.average != null
@@ -119,8 +116,6 @@ class _MyPageState extends State<MyPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          width: 80,
-          height: 80,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0), child: ima(imagename)),

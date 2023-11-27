@@ -111,7 +111,10 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       body: Container(
-          color: Colors.black, child: function(context, _searchResults)),
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.black,
+          child: function(context, _searchResults)),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromRGBO(13, 13, 13, 1),
         elevation: 2,
