@@ -2,9 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/clas.dart';
+import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/rating.dart';
+import 'package:flutter_application_1/searchpage.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class MyPage extends StatefulWidget {
-  Bloc harry;
+  Movies harry;
   MyPage({super.key, required this.harry});
 
   @override
@@ -17,77 +21,91 @@ class _MyPageState extends State<MyPage> {
   @override
   void initState() {
     super.initState();
-    img = widget.harry.images[0];
+    if (widget.harry.show!.image != null &&
+        widget.harry.show!.image!.original != null) {
+      img = widget.harry.show!.image!.original!;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Details'),
+        backgroundColor: Colors.black,
+        title: Text(
+          widget.harry.show!.name!,
+          softWrap: false,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ima(img),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.harry.title,
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  '\$${widget.harry.price.toString()}',
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            widget.harry.show != null
+                ? widget.harry.show!.image != null
+                    ? widget.harry.show!.image!.medium != null
+                        ? ima(img)
+                        : Container()
+                    : Container()
+                : Container(),
+            widget.harry.show!.rating!.average != null
+                ? StarRating(
+                    rating: widget.harry.show!.rating!.average! / 2, br: false)
+                : const StarRating(rating: 0, br: false),
+            Html(
+              data: widget.harry.show!.summary!,
             ),
-            const SizedBox(height: 8.0),
-            Text(
-              widget.harry.description,
-              style: const TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            SizedBox(
-              height: 90,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.harry.images.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildiy(widget.harry.images[index]);
-                  }),
-            ),
-            const SizedBox(height: 16.0),
           ],
         ),
       ),
-      floatingActionButton: TextButton(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.blue,
-          padding: const EdgeInsets.all(12.0),
-        ),
-        child: const Text(
-          'BUY NOW',
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.white,
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromRGBO(13, 13, 13, 1),
+        elevation: 2,
+        selectedLabelStyle: const TextStyle(color: Colors.redAccent),
+        selectedItemColor: Colors.redAccent,
+        unselectedItemColor: Colors.redAccent,
+        unselectedLabelStyle: const TextStyle(color: Colors.redAccent),
+        currentIndex: 0,
+        showSelectedLabels: true,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              color: Colors.redAccent,
+            ),
+            label: 'HOME',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+              color: Colors.redAccent,
+            ),
+            label: 'SEARCH',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Searchpage(),
+              ),
+            );
+          } else if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyApp(),
+              ),
+            );
+          }
+        },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

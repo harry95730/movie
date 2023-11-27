@@ -7,9 +7,10 @@ import 'package:flutter_application_1/clas.dart';
 import 'package:http/http.dart' as http;
 
 var data = [];
-List<Bloc> dataMap = [];
+List<Movies> dataMap = [];
 Map<String, bool> keyvalue = {};
-List<Bloc> data1 = [];
+List<Movies> data1 = [];
+String hat = 'a';
 
 TextEditingController controller = TextEditingController();
 
@@ -25,27 +26,24 @@ class Servi {
     );
   }
 
-  Future<List<Bloc>> fetchBlogs(BuildContext context) async {
-    const url = 'https://api.escuelajs.co/api/v1/products';
+  Future<List<Movies>> fetchBlogs(BuildContext context) async {
+    String url = 'https://api.tvmaze.com/search/shows?q=$hat';
 
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        data = jsonDecode(response.body);
-
-        dataMap = data.map((e) {
-          return Bloc.fromMap(e);
-        }).toList();
-        return dataMap;
-      } else {
-        showSnackbar(
-            context,
-            'Request failed with status code: ${response.statusCode}',
-            Colors.red);
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      List<dynamic> parsedJson = json.decode(response.body);
+      for (var jsonMovie in parsedJson) {
+        Movies movie = Movies.fromJson(jsonMovie);
+        dataMap.add(movie);
       }
-    } catch (e) {
-      showSnackbar(context, 'Error: $e', Colors.red);
+      return dataMap;
+    } else {
+      showSnackbar(
+          context,
+          'Request failed with status code: ${response.statusCode}',
+          Colors.red);
     }
+
     return [];
   }
 }
